@@ -1,0 +1,271 @@
+import 'package:flutter/material.dart';
+import 'dart:math';
+
+void main() {
+  runApp(const PowerCalculatorApp());
+}
+
+class PowerCalculatorApp extends StatelessWidget {
+  const PowerCalculatorApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Kalkulator Pangkat',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      home: const PowerCalculatorScreen(),
+    );
+  }
+}
+
+class PowerCalculatorScreen extends StatefulWidget {
+  const PowerCalculatorScreen({super.key});
+
+  @override
+  State<PowerCalculatorScreen> createState() => _PowerCalculatorScreenState();
+}
+
+class _PowerCalculatorScreenState extends State<PowerCalculatorScreen> {
+  // Controllers untuk input
+  final TextEditingController _baseController = TextEditingController();
+  final TextEditingController _exponentController = TextEditingController();
+  
+  // Hasil perhitungan
+  double _result = 0;
+  String _errorMessage = '';
+  
+  // Fungsi untuk menghitung pangkat
+  void _calculatePower() {
+    setState(() {
+      _errorMessage = '';
+      
+      try {
+        // Ambil nilai dari input
+        double base = double.parse(_baseController.text);
+        int exponent = int.parse(_exponentController.text);
+        
+        // Hitung pangkat
+        _result = pow(base, exponent).toDouble();
+        
+      } catch (e) {
+        _errorMessage = 'Masukkan angka yang valid!';
+        _result = 0;
+      }
+    });
+  }
+  
+  // Fungsi untuk membersihkan input
+  void _clearInputs() {
+    setState(() {
+      _baseController.clear();
+      _exponentController.clear();
+      _result = 0;
+      _errorMessage = '';
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Kalkulator Pangkat'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Judul
+            const Text(
+              'HITUNG PANGKAT',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+            const SizedBox(height: 30),
+            
+            // Input fields
+            Row(
+              children: [
+                // Input bilangan
+                Expanded(
+                  child: TextField(
+                    controller: _baseController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Bilangan',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.numbers),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                
+                // Simbol pangkat
+                const Text(
+                  '^',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                
+                // Input pangkat
+                Expanded(
+                  child: TextField(
+                    controller: _exponentController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Pangkat',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.exposure),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            
+            // Tombol
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _calculatePower,
+                    icon: const Icon(Icons.calculate),
+                    label: const Text('HITUNG'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _clearInputs,
+                    icon: const Icon(Icons.clear),
+                    label: const Text('HAPUS'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            
+            // Hasil atau Error
+            if (_errorMessage.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red[200]!),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.error, color: Colors.red),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else if (_baseController.text.isNotEmpty && _exponentController.text.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const Text(
+                        'HASIL',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _result.toString(),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '= ${_baseController.text}^${_exponentController.text}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            
+            const SizedBox(height: 30),
+            
+            // Contoh
+            const Text(
+              'Contoh:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _buildExampleButton('2^3'),
+                _buildExampleButton('5^2'),
+                _buildExampleButton('10^0'),
+                _buildExampleButton('3^4'),
+                _buildExampleButton('2^-3'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildExampleButton(String example) {
+    var parts = example.split('^');
+    return ElevatedButton(
+      onPressed: () {
+        _baseController.text = parts[0];
+        _exponentController.text = parts[1];
+        _calculatePower();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue[100],
+        foregroundColor: Colors.blue[800],
+      ),
+      child: Text(example),
+    );
+  }
+  
+  @override
+  void dispose() {
+    _baseController.dispose();
+    _exponentController.dispose();
+    super.dispose();
+  }
+}
