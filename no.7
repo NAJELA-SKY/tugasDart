@@ -1,0 +1,37 @@
+import 'dart:math';
+
+/// Performs a basic arithmetic operation on two numbers.
+///
+/// Takes two [double] numbers, [a] and [b], and a [String] [operator]
+/// representing the operation to perform.
+///
+/// Supported operators are '+', '-', '*', '/'.
+///
+/// Returns the result of the operation as a [double].
+/// Returns [double.infinity] if division by zero occurs.
+/// Returns [double.nan] if an unsupported operator is provided.
+double kalkulator(double a, double b, String operator) {
+  switch (operator) {
+    case '+':
+      return a + b;
+    case '-':
+      return a - b;
+    case '*':
+      return a * b;
+    case '/':
+      return b == 0 ? double.infinity : a / b;
+    default:
+      return double.nan; // Return NaN for unsupported operators
+  }
+}
+
+void main() {
+  // Test cases for the kalkulator function
+  print('12 + 4 = ${kalkulator(12, 4, '+')}'); // Expected: 16.0
+  print('12 - 4 = ${kalkulator(12, 4, '-')}'); // Expected: 8.0
+  print('12 * 4 = ${kalkulator(12, 4, '*')}'); // Expected: 48.0
+  print('12 / 4 = ${kalkulator(12, 4, '/')}'); // Expected: 3.0
+  print('12 / 0 = ${kalkulator(12, 0, '/')}'); // Expected: Infinity
+  print('12 ^ 4 = ${kalkulator(12, 4, '^')}'); // Expected: NaN (unsupported operator)
+  print('Invalid operator = ${kalkulator(10, 5, 'x')}'); // Expected: NaN
+}
