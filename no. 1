@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: UmurPage(),
+    );
+  }
+}
+
+class UmurPage extends StatefulWidget {
+  @override
+  _UmurPageState createState() => _UmurPageState();
+}
+
+class _UmurPageState extends State<UmurPage> {
+  final TextEditingController namaController = TextEditingController();
+  final TextEditingController umurController = TextEditingController();
+
+  String hasil = "";
+
+  void hitungUmur() {
+    String nama = namaController.text;
+    int umur = int.tryParse(umurController.text) ?? 0;
+    int sisaTahun = 100 - umur;
+
+    setState(() {
+      hasil =
+          "Halo $nama, kamu akan berusia 100 tahun dalam $sisaTahun tahun lagi.";
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Hitung Umur 100 Tahun"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: namaController,
+              decoration: InputDecoration(
+                labelText: "Masukkan Nama",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: umurController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Masukkan Usia",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: hitungUmur,
+              child: Text("Hitung"),
+            ),
+            SizedBox(height: 20),
+            Text(
+              hasil,
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
