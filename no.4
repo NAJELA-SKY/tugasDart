@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ListAngkaPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class ListAngkaPage extends StatelessWidget {
+  final List<int> a = [1, 1, 2, 3, 5, 8, 13, 21, 4, 55, 89];
+
+  @override
+  Widget build(BuildContext context) {
+    final hasil = a.where((angka) => angka < 5).toList();
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Angka < 5")),
+      body: ListView.builder(
+        itemCount: hasil.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(hasil[index].toString()),
+          );
+        },
+      ),
+    );
+  }
+}
