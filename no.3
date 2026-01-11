@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: AngkaPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class AngkaPage extends StatelessWidget {
+  List<int> generateAngka() {
+    List<int> angka = [];
+    for (int i = 1; i <= 100; i++) {
+      if (i != 41) {
+        angka.add(i);
+      }
+    }
+    return angka;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final data = generateAngka();
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Angka 1–100 kecuali 41")),
+      body: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(data[index].toString()),
+          );
+        },
+      ),
+    );
+  }
+}
