@@ -1,0 +1,192 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const GanjilGenapApp());
+}
+
+class GanjilGenapApp extends StatelessWidget {
+  const GanjilGenapApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Penentu Ganjil/Genap',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      home: const GanjilGenapScreen(),
+    );
+  }
+}
+
+class GanjilGenapScreen extends StatefulWidget {
+  const GanjilGenapScreen({super.key});
+
+  @override
+  State<GanjilGenapScreen> createState() => _GanjilGenapScreenState();
+}
+
+class _GanjilGenapScreenState extends State<GanjilGenapScreen> {
+  final TextEditingController _controller = TextEditingController();
+  String _result = '';
+  Color _resultColor = Colors.grey;
+
+  void _checkNumber() {
+    final input = _controller.text.trim();
+    
+    if (input.isEmpty) {
+      setState(() {
+        _result = 'Silakan masukkan angka';
+        _resultColor = Colors.orange;
+      });
+      return;
+    }
+    
+    try {
+      final number = int.parse(input);
+      
+      setState(() {
+        if (number % 2 == 0) {
+          _result = '$number adalah bilangan GENAP';
+          _resultColor = Colors.blue;
+        } else {
+          _result = '$number adalah bilangan GANJIL';
+          _resultColor = Colors.green;
+        }
+      });
+      
+    } catch (e) {
+      setState(() {
+        _result = 'Input tidak valid. Masukkan angka!';
+        _resultColor = Colors.red;
+      });
+    }
+  }
+
+  void _clearInput() {
+    setState(() {
+      _controller.clear();
+      _result = '';
+      _resultColor = Colors.grey;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Penentu Bilangan Ganjil/Genap'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Judul
+            const Text(
+              'Masukkan Angka',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            
+            // Input field
+            TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Angka',
+                hintText: 'Masukkan angka bulat',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: const Icon(Icons.numbers),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: _clearInput,
+                ),
+              ),
+              onSubmitted: (_) => _checkNumber(),
+            ),
+            const SizedBox(height: 20),
+            
+            // Tombol
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _checkNumber,
+                    icon: const Icon(Icons.check),
+                    label: const Text('CEK'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _clearInput,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('RESET'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            
+            // Hasil
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: _resultColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: _resultColor, width: 2),
+              ),
+              child: Center(
+                child: Text(
+                  _result.isEmpty ? 'Hasil akan muncul di sini' : _result,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: _resultColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            
+            // Informasi tambahan
+            const SizedBox(height: 20),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Text(
+                      'Informasi:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
+                    Text('• Bilangan genap habis dibagi 2'),
+                    Text('• Bilangan ganjil tidak habis dibagi 2'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
